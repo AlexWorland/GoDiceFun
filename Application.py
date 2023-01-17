@@ -1,16 +1,10 @@
 import godice as gd
 import time
+import csv
 
 def main():
-    print("Scanning for dice...")
-    dice_devices = gd.discover_dice()
-    while len(dice_devices) < 1:
-        print("Found no go dice, retrying...")
-        dice_devices = gd.discover_dice()
-    print ("Found %d go dice", len(dice_devices))
-    for device in dice_devices:
-        print("\tFound go dice: %s", device)
-    
+    dice_devices = findDice()
+
     die = gd.create_dice(dice_devices[0].address)
 
     print("Waiting for die to initiate...")
@@ -26,8 +20,9 @@ def main():
     print("Die initiated")
 
     batteryCountInterval = 10
-
     batterCounter = batteryCountInterval
+
+    outputFile = initDiceRollFile()
 
     while True:
         while not die.result_queue.empty():
@@ -62,12 +57,43 @@ def main():
                     die.pulse_led(6, 5, 10, [0, 255, 0])
                 elif value == 1:
                     die.pulse_led(6, 5, 10, [255, 0, 0])
+                writeValueToFile(outputFile, value)
             
             if batterCounter == 0:
                 die.send_battery_request()
                 batterCounter = batteryCountInterval
             else:
                 batterCounter -= 1
+
+def findDice():
+    print("Scanning for dice...")
+    dice_devices = gd.discover_dice()
+    while len(dice_devices) < 1:
+        print("Found no go dice, retrying...")
+        dice_devices = gd.discover_dice()
+    print ("Found %d go dice", len(dice_devices))
+    for device in dice_devices:
+        print("\tFound go dice: %s", device)
+    return dice_devices
+
+def writeValuesToFile(file, values):
+    # write the values to the csv file
+    writer = csv.writer(file)
+    writer.writerow(values)
+    file.flush()
+
+def writeValueToFile(file, value):
+    # write the value to the csv file
+    writer = csv.writer(file)
+    writer.writerow([value])
+    file.flush()
+
+def initDiceRollFile():
+    # create a csv file to store dice rolls that has the date and time in its name
+    filename = "dice_rolls_" + time.strftime("%Y%m%d-%H%M%S") + ".csv"
+    file = open(filename, 'w', newline='')
+    return file
+
 if __name__ == "__main__":
     main()
             
