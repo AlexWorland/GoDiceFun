@@ -18,7 +18,8 @@ def main():
     die.set_die_type(gd.DieType.D20)
 
     print("Die initiated")
-
+    die.send_battery_request()
+    
     batteryCountInterval = 10
     batterCounter = batteryCountInterval
 

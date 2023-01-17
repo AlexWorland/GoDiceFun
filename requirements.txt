@@ -5,3 +5,4 @@ pyobjc-core==8.5.1
 pyobjc-framework-Cocoa==8.5.1
 pyobjc-framework-CoreBluetooth==8.5.1
 pyobjc-framework-libdispatch==8.5.1
+matplotlib==3.6.3
