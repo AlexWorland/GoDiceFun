@@ -23,16 +23,16 @@ def analyzeData(data):
     # return a list of the counts
     print(data)
     counts = []
-    for i in range(1, 20):
+    for i in range(1, 21):
         counts.append(data.count(i))
     return counts
 
 def plotData(data):
     # plot data as a bar graph
     print(data)
-    plt.bar(range(1, 20), data)
-    # set the x axis to be the numbers 1-20
-    plt.xticks(range(1, 20))
+    plt.bar(range(1, 21), data)
+    plt.title("Dice Rolls (Total Rolls: " + str(sum(data)) + ")")
+    plt.xticks(range(1, 21))
     plt.show()
 
 def openFiles():
